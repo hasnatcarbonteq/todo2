@@ -1,0 +1,29 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    userId    String   @id
+    email     String   @unique
+    username  String   @unique
+    password  String
+    todo      Todo[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Todo {
+    todoId      String   @id
+    title       String
+    description String
+    completed   Boolean  @default(false)
+    user        User     @relation(fields: [userId], references: [userId])
+    userId      String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}
