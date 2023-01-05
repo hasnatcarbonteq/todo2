@@ -1,15 +1,18 @@
+import { injectable, inject } from "tsyringe";
 import LoginUserDTO from "./login-user-dto";
 import RegisterUserDTO from "./register-user-dto";
+import GoogleOAuth2RedirectDTO from "./google-oauth2-redirect-dto";
 import IUserRepository from "@domain/Entities/User/IUser-repository";
-import AuthService from "@infrastructure/Services/auth-service";
-import { injectable, inject } from "tsyringe";
 import HttpError from "@infrastructure/Errors/HttpException";
+import AuthService from "@infrastructure/Services/auth-service";
+import GoogleOAuthService from "@infrastructure/Services/google-oauth-service";
 
 @injectable()
 class UserService {
     constructor(
         @inject("IUserRepository") private userRepository: IUserRepository,
-        private authService: AuthService
+        private authService: AuthService,
+        private googleOAuthService: GoogleOAuthService
     ) {}
 
     register = async (registerUserDTO: RegisterUserDTO) => {
@@ -54,6 +57,33 @@ class UserService {
         });
 
         return { user, token };
+    };
+
+    googleLoginUrl = async () => {
+        return await this.googleOAuthService.getAuthUrl();
+    };
+
+    googleOauthCallback = async (
+        googleOAuth2RedirectDTO: GoogleOAuth2RedirectDTO
+    ) => {
+        const { access_token } = await this.googleOAuthService.getAccessToken(
+            googleOAuth2RedirectDTO.getCode()
+        );
+
+        const userInfo = await this.googleOAuthService.getUserInfo();
+        const { email, name, picture } = userInfo;
+
+        const userResult = await this.userRepository.fetchByEmail(email);
+        if (userResult.isNone()) {
+            
+        } else {
+            const user = userResult.unwrap();
+            const token = await this.authService.signJWT({
+                id: user.userId,
+                email: user.email,
+            });
+            return { user, token };
+        }
     };
 }
 

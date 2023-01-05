@@ -23,13 +23,16 @@
         "typescript": "^4.9.4"
     },
     "dependencies": {
+        "@googleapis/oauth2": "^1.0.0",
         "@prisma/client": "^4.8.0",
+        "axios": "^1.2.2",
         "bcrypt": "^5.1.0",
         "bunyan": "^1.8.15",
         "commander": "^9.4.1",
         "cors": "^2.8.5",
         "dotenv": "^16.0.3",
         "express": "^4.18.2",
+        "googleapis": "^110.0.0",
         "jsonwebtoken": "^9.0.0",
         "morgan": "^1.10.0",
         "oxide.ts": "^1.1.0",

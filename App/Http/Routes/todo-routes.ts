@@ -11,7 +11,7 @@ router.post("/create", expressCallback(todoController.create));
 router.get("/get/:todoId", expressCallback(todoController.getById));
 router.put("/update", expressCallback(todoController.update));
 router.delete("/delete/:todoId", expressCallback(todoController.delete));
-router.get("/getByUserId/:userId", expressCallback(todoController.getByUserId));
-router.get("/getAll", expressCallback(todoController.getAll));
+router.get("/get-by-user-id/:userId", expressCallback(todoController.getByUserId));
+router.get("/get-all", expressCallback(todoController.getAll));
 
 export default router;
