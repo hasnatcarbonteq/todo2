@@ -66,24 +66,11 @@ class UserService {
     googleOauthCallback = async (
         googleOAuth2RedirectDTO: GoogleOAuth2RedirectDTO
     ) => {
-        const { access_token } = await this.googleOAuthService.getAccessToken(
+        const { id_token } = await this.googleOAuthService.getAccessToken(
             googleOAuth2RedirectDTO.getCode()
         );
 
-        const userInfo = await this.googleOAuthService.getUserInfo();
-        const { email, name, picture } = userInfo;
-
-        const userResult = await this.userRepository.fetchByEmail(email);
-        if (userResult.isNone()) {
-            
-        } else {
-            const user = userResult.unwrap();
-            const token = await this.authService.signJWT({
-                id: user.userId,
-                email: user.email,
-            });
-            return { user, token };
-        }
+        return { token: id_token };
     };
 }
 
