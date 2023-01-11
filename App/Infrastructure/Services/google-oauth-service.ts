@@ -1,6 +1,5 @@
 import { google } from "googleapis";
 import Config from "@infrastructure/Config";
-import axios from "axios";
 
 const { googleOauth } = Config;
 

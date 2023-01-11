@@ -1,3 +1,4 @@
+import HttpStatusCodes from "@application/Utils/http-status-codes";
 import AuthService from "@infrastructure/Services/auth-service";
 
 const auth = async (req, res, next) => {
@@ -17,7 +18,9 @@ const auth = async (req, res, next) => {
 
         return next();
     } catch (error) {
-        res.status(401).send({ error: "Unauthorized" });
+        res.status(HttpStatusCodes.UNAUTHORIZED).send({
+            error: "Unauthorized",
+        });
     }
 };
 

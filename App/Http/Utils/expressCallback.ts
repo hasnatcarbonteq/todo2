@@ -1,26 +1,33 @@
 import handleError from "./handleError";
+import HttpStatusCodes from "@application/Utils/http-status-codes";
 
 /**
  * @typedef {{body:object,headers?:object,statusCode?:number}} HttpResponse
  */
 
 const makeExpressCallback = (controller) => {
-    return (req, res) => {
+    return async (req, res) => {
         const httpRequest = makeHttpRequest(req);
-        controller(httpRequest)
-            .then((httpResponse) => {
-                const headers = httpResponse.headers || {
-                    "Content-Type": "application/json",
-                };
-                const statusCode = httpResponse.statusCode || 200;
+        const httpResponse = await controller(httpRequest);
 
-                res.set(headers);
+        if (httpResponse instanceof Error) {
+            return handleError(httpResponse, req, res);
+        }
 
-                return res.status(statusCode).send(httpResponse.body);
-            })
-            .catch((err) => {
-                handleError(err, res, req);
-            });
+        const headers = httpResponse.headers || {
+            "Content-Type": "application/json",
+        };
+        const statusCode =
+            httpResponse && httpResponse.statusCode
+                ? httpResponse.statusCode
+                : HttpStatusCodes.OK;
+
+        res.set(headers);
+
+        res.status(statusCode).json({
+            status: "success",
+            data: httpResponse.body,
+        });
     };
 };
 
@@ -44,17 +51,8 @@ function makeHttpRequest(req) {
             "User-Agent": req.get("User-Agent"),
             "Access-Control-Allow-Origin": "*",
         },
-        user: req.user,
-        adminUser: req.adminUser,
-        files: req.files,
-        file: req.file,
         clientIp: req.clientIp,
         decoded: req.decoded,
-        userId: req.decoded
-            ? req.decoded.userId
-            : req.adminUser && req.params.userId
-            ? req.params.userId
-            : null,
     };
 }
 

@@ -40,7 +40,7 @@ class UserService {
         );
 
         if (userResult.isNone()) {
-            throw new HttpError(400, "Invalid email or password");
+            return new HttpError(400, "Invalid email or password");
         }
         const user = userResult.unwrap();
         const isValid = await this.authService.verifyPassword(
@@ -48,7 +48,7 @@ class UserService {
             user.password
         );
         if (!isValid) {
-            throw new HttpError(400, "Invalid email or password");
+            return new HttpError(400, "Invalid email or password");
         }
 
         const token = await this.authService.signJWT({
@@ -56,7 +56,7 @@ class UserService {
             email: user.email,
         });
 
-        return { user, token };
+        return { token };
     };
 
     googleLoginUrl = async () => {

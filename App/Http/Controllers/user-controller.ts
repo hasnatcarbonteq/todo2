@@ -1,36 +1,33 @@
 import "reflect-metadata";
+import { injectable } from "tsyringe";
+import container from "@infrastructure/DIContainer/container";
+import UserService from "@application/User/user-service";
+
 import LoginUserDTO from "@application/User/login-user-dto";
 import RegisterUserDTO from "@application/User/register-user-dto";
 import GoogleOAuth2RedirectDTO from "@application/User/google-oauth2-redirect-dto";
-import UserService from "@application/User/user-service";
-import { injectable } from "tsyringe";
-import container from "@infrastructure/DIContainer/container";
+import AuthValidation from "@application/Validations/AuthValidation";
 
 const userService = container.resolve(UserService);
 
 @injectable()
 class UserController {
     login = async (request) => {
+        const errors = AuthValidation.login(request);
+        if (errors) return errors;
         const loginUserDTO = new LoginUserDTO(request);
-        const response = await userService.login(loginUserDTO);
-        return {
-            body: { status: "success", data: response },
-        };
+        return await userService.login(loginUserDTO);
     };
 
     register = async (request) => {
+        const errors = AuthValidation.register(request);
+        if (errors) return errors;
         const registerUserDTO = new RegisterUserDTO(request);
-        const response = await userService.register(registerUserDTO);
-        return {
-            body: { status: "success", data: response },
-        };
+        return await userService.register(registerUserDTO);
     };
 
     googleLoginUrl = async (request) => {
-        const response = await userService.googleLoginUrl();
-        return {
-            body: { status: "success", data: response },
-        };
+        return await userService.googleLoginUrl();
     };
 
     googleOauthCallback = async (request) => {
@@ -38,9 +35,7 @@ class UserController {
         const response = await userService.googleOauthCallback(
             googleOAuth2RedirectDTO
         );
-        return {
-            body: { status: "success", data: response },
-        };
+        return response;
     };
 }
 

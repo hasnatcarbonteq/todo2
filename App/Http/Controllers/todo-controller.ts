@@ -9,57 +9,52 @@ import UpdateTodoDTO from "@application/Todo/update-todo-dto";
 import DeleteTodoDTO from "@application/Todo/delete-todo-dto";
 import GetTodoByUserIdDTO from "@application/Todo/get-todo-by-userid-dto";
 import GetAllTodoDTO from "@application/Todo/get-all-todo-dto";
+import TodoValidation from "@application/Validations/TodoValidation";
 
 const todoService = container.resolve(TodoService);
 
 @injectable()
 class TodoController {
     create = async (request) => {
+        const errors = TodoValidation.create(request);
+        if (errors) return errors;
         const createTodoDTO = new CreateTodoDTO(request);
-        const response = await todoService.create(createTodoDTO);
-        return {
-            body: { status: "success", data: response },
-        };
+        return await todoService.create(createTodoDTO);
     };
 
     getById = async (request) => {
+        const errors = TodoValidation.getById(request);
+        if (errors) return errors;
         const getTodoByIdDTO = new GetTodoByIdDto(request);
-        const response = await todoService.getById(getTodoByIdDTO);
-        return {
-            body: { status: "success", data: response },
-        };
+        return await todoService.getById(getTodoByIdDTO);
     };
 
     update = async (request) => {
+        const errors = TodoValidation.update(request);
+        if (errors) return errors;
         const updateTodoDTO = new UpdateTodoDTO(request);
-        const response = await todoService.update(updateTodoDTO);
-        return {
-            body: { status: "success", data: response },
-        };
+        return await todoService.update(updateTodoDTO);
     };
 
     delete = async (request) => {
+        const errors = TodoValidation.getById(request);
+        if (errors) return errors;
         const deleteTodoDTO = new DeleteTodoDTO(request);
-        const response = await todoService.delete(deleteTodoDTO);
-        return {
-            body: { status: "success", data: response },
-        };
+        return await todoService.delete(deleteTodoDTO);
     };
 
     getByUserId = async (request) => {
+        const errors = TodoValidation.getByUserId(request);
+        if (errors) return errors;
         const getTodoByUserIdDTO = new GetTodoByUserIdDTO(request);
-        const response = await todoService.getByUserId(getTodoByUserIdDTO);
-        return {
-            body: { status: "success", data: response },
-        };
+        return await todoService.getByUserId(getTodoByUserIdDTO);
     };
 
     getAll = async (request) => {
+        const errors = TodoValidation.getAll(request);
+        if (errors) return errors;
         const getAllTodoDTO = new GetAllTodoDTO(request);
-        const response = await todoService.getAll(getAllTodoDTO);
-        return {
-            body: { status: "success", data: response },
-        };
+        return await todoService.getAll(getAllTodoDTO);
     };
 }
 

@@ -25,7 +25,6 @@
     "dependencies": {
         "@googleapis/oauth2": "^1.0.0",
         "@prisma/client": "^4.8.0",
-        "axios": "^1.2.2",
         "bcrypt": "^5.1.0",
         "bunyan": "^1.8.15",
         "commander": "^9.4.1",
@@ -40,6 +39,7 @@
         "reflect-metadata": "^0.1.13",
         "ts-node": "^10.9.1",
         "tsconfig-paths": "^4.1.2",
-        "tsyringe": "^4.7.0"
+        "tsyringe": "^4.7.0",
+        "validator": "^13.7.0"
     }
 }

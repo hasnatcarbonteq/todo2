@@ -4,7 +4,6 @@ import { Option, Some, None } from "oxide.ts";
 import { prismaNotFoundErrorHandler } from "@infrastructure/Utils/prisma-error-handler";
 import Todo from "@domain/Entities/Todo/todo";
 import ITodoRepository from "@domain/Entities/Todo/ITodo-repository";
-import PaginationOptions from "@infrastructure/Utils/pagination-options";
 import PaginatedData from "@infrastructure/Utils/paginated-data";
 
 @injectable()
