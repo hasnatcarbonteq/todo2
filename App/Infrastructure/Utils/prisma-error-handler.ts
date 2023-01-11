@@ -7,5 +7,5 @@ export const prismaNotFoundErrorHandler = (e) => {
             return None;
         }
     }
-    throw e;
+    return e;
 };
