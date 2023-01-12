@@ -20,6 +20,7 @@ class GoogleOAuthService {
             scope: [
                 "https://www.googleapis.com/auth/userinfo.email",
                 "https://www.googleapis.com/auth/userinfo.profile",
+                "openid",
             ],
         });
 
@@ -31,6 +32,7 @@ class GoogleOAuthService {
             const { tokens } = await this.client.getToken(code);
 
             this.client.setCredentials(tokens);
+
             return tokens;
         } catch (error) {
             return error;

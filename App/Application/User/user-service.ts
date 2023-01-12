@@ -3,6 +3,7 @@ import LoginUserDTO from "./login-user-dto";
 import RegisterUserDTO from "./register-user-dto";
 import GoogleOAuth2RedirectDTO from "./google-oauth2-redirect-dto";
 import IUserRepository from "@domain/Entities/User/IUser-repository";
+import User from "@domain/Entities/User/user";
 import HttpError from "@infrastructure/Errors/HttpException";
 import AuthService from "@infrastructure/Services/auth-service";
 import GoogleOAuthService from "@infrastructure/Services/google-oauth-service";
@@ -56,7 +57,7 @@ class UserService {
             email: user.email,
         });
 
-        return { token };
+        return { user, token };
     };
 
     googleLoginUrl = async () => {
@@ -66,11 +67,30 @@ class UserService {
     googleOauthCallback = async (
         googleOAuth2RedirectDTO: GoogleOAuth2RedirectDTO
     ) => {
-        const { id_token } = await this.googleOAuthService.getAccessToken(
+        const response = await this.googleOAuthService.getAccessToken(
             googleOAuth2RedirectDTO.getCode()
         );
 
-        return { token: id_token };
+        if (response instanceof HttpError) {
+            return response;
+        }
+
+        const data = await this.googleOAuthService.getUserInfo();
+
+        const userResult = await this.userRepository.fetchByEmail(data.email);
+
+        if (userResult.isNone()) {
+            const newUser = User.create({
+                email: data.email,
+                password: "asdF1234!",
+                username: `${data.given_name} ${data.family_name}`,
+            });
+            const user = await this.userRepository.add(newUser);
+
+            return { user: user.unwrap(), token: response.id_token };
+        } else {
+            return { user: userResult.unwrap(), token: response.id_token };
+        }
     };
 }
 

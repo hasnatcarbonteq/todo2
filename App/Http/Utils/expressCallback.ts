@@ -26,7 +26,7 @@ const makeExpressCallback = (controller) => {
 
         res.status(statusCode).json({
             status: "success",
-            data: httpResponse.body,
+            data: httpResponse,
         });
     };
 };
