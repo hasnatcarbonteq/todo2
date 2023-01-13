@@ -11,9 +11,11 @@
     "author": "",
     "license": "ISC",
     "prisma": {
-        "schema": "./App/Infrastructure/Database/prisma/schema.prisma"
+        "schema": "./App/Infrastructure/Database/prisma/schema.prisma",
+        "seed": "ts-node App/Infrastructure/Database/prisma/seed.ts"
     },
     "devDependencies": {
+        "@faker-js/faker": "^7.6.0",
         "@types/bunyan": "^1.8.8",
         "@types/express": "^4.17.15",
         "@types/morgan": "^1.9.4",
