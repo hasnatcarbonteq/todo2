@@ -1,5 +1,4 @@
 import "reflect-metadata";
-import { injectable } from "tsyringe";
 import container from "@infrastructure/DIContainer/container";
 import UserService from "@application/User/user-service";
 
@@ -10,7 +9,6 @@ import AuthValidation from "@application/Validations/AuthValidation";
 
 const userService = container.resolve(UserService);
 
-@injectable()
 class UserController {
     login = async (request) => {
         const errors = AuthValidation.login(request);

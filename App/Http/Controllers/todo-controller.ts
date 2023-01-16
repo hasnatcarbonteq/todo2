@@ -1,5 +1,4 @@
 import "reflect-metadata";
-import { injectable } from "tsyringe";
 import container from "@infrastructure/DIContainer/container";
 import TodoService from "@application/Todo/todo-service";
 
@@ -13,7 +12,6 @@ import TodoValidation from "@application/Validations/TodoValidation";
 
 const todoService = container.resolve(TodoService);
 
-@injectable()
 class TodoController {
     create = async (request) => {
         const errors = TodoValidation.create(request);
