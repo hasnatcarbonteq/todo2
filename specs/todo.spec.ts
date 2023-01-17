@@ -17,8 +17,8 @@ describe("Todo", function () {
         };
         const response = await todoController.create(request);
         expect(todoSpy.calledOnce).to.be.true;
-        // expect(response).to.be.an("object");
-        // expect(response).to.have.property("todoId");
-        // expect(response).to.have.property("title");
+        expect(response).to.be.an("object");
+        expect(response).to.have.property("todoId");
+        expect(response).to.have.property("title");
     });
 });
