@@ -25,6 +25,6 @@
             "@infrastructure/*": ["App/Infrastructure/*"]
         }
     },
-    "include": ["App/**/*.ts", "CLI"],
+    "include": ["App/**/*.ts", "CLI", "specs/**.ts"],
     "exclude": ["node_modules"]
 }

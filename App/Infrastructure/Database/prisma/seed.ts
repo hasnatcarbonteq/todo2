@@ -14,6 +14,8 @@ class PrismaSeeder {
 
     async seed() {
         await this.prisma.$connect();
+        await this.prisma.user.deleteMany();
+        await this.prisma.todo.deleteMany();
         await this.createUsers();
         await this.createTodos();
         await this.prisma.$disconnect();

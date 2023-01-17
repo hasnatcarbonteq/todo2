@@ -1,6 +1,7 @@
 import { injectable, inject } from "tsyringe";
 import HttpError from "@infrastructure/Errors/HttpException";
 import ITodoRepository from "@domain/Entities/Todo/ITodo-repository";
+import IUserRepository from "@domain/Entities/User/IUser-repository";
 
 import CreateTodoDTO from "./create-todo-dto";
 import GetTodoByIdDTO from "./get-todo-by-id-dto";
@@ -12,10 +13,15 @@ import GetAllTodoDTO from "./get-all-todo-dto";
 @injectable()
 class TodoService {
     constructor(
-        @inject("ITodoRepository") private todoRepository: ITodoRepository
+        @inject("ITodoRepository") private todoRepository: ITodoRepository,
+        @inject("IUserRepository") private userRepository: IUserRepository
     ) {}
 
     create = async (createTodoDTO: CreateTodoDTO) => {
+        const userResult = await this.userRepository.fetchById(
+            createTodoDTO.getTodo().userId
+        );
+        if (userResult.isNone()) return new HttpError(404, "User not found");
         const savedTodo = await this.todoRepository.add(
             createTodoDTO.getTodo()
         );
@@ -26,7 +32,7 @@ class TodoService {
         const todoResult = await this.todoRepository.fetchById(
             getTodoByIdDTO.getTodoId()
         );
-        if (todoResult.isNone()) throw new HttpError(404, "Todo not found");
+        if (todoResult.isNone()) return new HttpError(404, "Todo not found");
         return todoResult.unwrap();
     };
 
@@ -34,7 +40,7 @@ class TodoService {
         const todoResult = await this.todoRepository.fetchById(
             updateTodoDTO.getTodo().todoId
         );
-        if (todoResult.isNone()) throw new HttpError(404, "Todo not found");
+        if (todoResult.isNone()) return new HttpError(404, "Todo not found");
 
         const todo = todoResult.unwrap();
         todo.title = updateTodoDTO.getTodo().title;
@@ -49,7 +55,7 @@ class TodoService {
         const todoResult = await this.todoRepository.fetchById(
             deleteTodoDTO.getTodoId()
         );
-        if (todoResult.isNone()) throw new HttpError(404, "Todo not found");
+        if (todoResult.isNone()) return new HttpError(404, "Todo not found");
 
         const result = await this.todoRepository.remove(
             deleteTodoDTO.getTodoId()
